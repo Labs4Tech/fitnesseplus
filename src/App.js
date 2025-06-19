@@ -1,24 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
+import {useState} from "react";
+import {Editor} from "./Editor";
+import {FormatPipeTable} from "./helper";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const App = ()=> {
+    const [rawText, setRawText] = useState('');
+
+
+    return (
+        <div className="App m-3">
+            <div className={"header"}>
+                <h1>Fitnesse Plus</h1>
+            </div>
+
+            <div className={"flex my-2"}>
+                <button onClick={()=> setRawText(FormatPipeTable(rawText))}>Format</button>
+            </div>
+            <Editor rawText={rawText} setRawText={setRawText}/>
+        </div>
   );
 }
 
