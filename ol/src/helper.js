@@ -33,3 +33,4 @@ export function FormatPipeTable(input) {
 
     return formattedRows.join('\n');
 }
+
