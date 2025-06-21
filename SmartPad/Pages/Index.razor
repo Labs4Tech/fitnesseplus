@@ -1,4 +1,27 @@
 ﻿@page "/"
+@using SmartPad.Parsing
 
-<textarea placeholder="Start Typing..." class="w-100 h-screen"></textarea>
+@*Action Row*@
+<div class="sticky-top bg-light p-2 border-bottom text-end">
+    <button type="button" class="btn btn-secondary">Format</button>
+</div>
+
+<textarea class="w-100 h-screen mt-1 fs-5"
+    placeholder="Start Typing..." 
+    onchange="@UpdateContent" value="@content.RawContent"
+/>
+
+@code {
+    private TextContent content = new();
+
+    private void UpdateContent(ChangeEventArgs e)
+    {
+        content.RawContent = e.Value?.ToString() ?? "";
+    }
+
+    private void FormatContent()
+    {
+        
+    }
+}
 
