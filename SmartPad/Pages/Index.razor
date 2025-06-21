@@ -1,18 +1,26 @@
 ﻿@page "/"
-@using SmartPad.Parsing
+@using SmartPad.Implementations
 
 @*Action Row*@
 <div class="sticky-top bg-light p-2 border-bottom text-end">
-    <button type="button" class="btn btn-secondary">Format</button>
+    <button type="button" class="btn btn-secondary"
+            onclick="@FormatContent">Format</button>
 </div>
 
-<textarea class="w-100 h-screen mt-1 fs-5"
+<textarea class="w-100 h-screen mt-1 "
     placeholder="Start Typing..." 
     onchange="@UpdateContent" value="@content.RawContent"
 />
 
 @code {
     private TextContent content = new();
+    private SampleFormatter formatter;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        formatter = new SampleFormatter(content);
+    }
+
 
     private void UpdateContent(ChangeEventArgs e)
     {
@@ -21,7 +29,9 @@
 
     private void FormatContent()
     {
-        
+        formatter.Format();
     }
+
+    
 }
 
