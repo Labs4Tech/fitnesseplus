@@ -24,7 +24,13 @@ namespace SmartPad.Implementations
         {
         }
 
-       
+        void AddNewLines(ref string text, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                text += "\n";
+            }
+        }
 
         protected override string FormatAction(TextContent content)
         {
@@ -33,7 +39,7 @@ namespace SmartPad.Implementations
 
             string formattedOutput = string.Empty;
 
-            var fixtures = Regex.Split(input.Trim(), @"(\r?\n){2,}");
+            var fixtures = Regex.Split(input.Trim(), @"(?:\r?\n){2,}");
 
             foreach (var fixture in fixtures)
             {
@@ -69,7 +75,7 @@ namespace SmartPad.Implementations
                         if (cellsInRow.Count > maxColCount && i + 2 >= cellsInRow.Count)
                             paddingAmount = cell.Length;
                         else if (cellsInRow.Count < maxColCount && i + 2 == cellsInRow.Count)
-                            paddingAmount = colWidths.Skip(i).Sum() + ((maxColCount - 3) * 3);
+                            paddingAmount = colWidths.Skip(i).Sum() + ((maxColCount - i - 2) * 3);
 
                         return cell.PadRight(paddingAmount);
                     });
@@ -77,6 +83,7 @@ namespace SmartPad.Implementations
                 });
 
                 formattedOutput += string.Join("\n", formattedLines);
+                AddNewLines(ref formattedOutput, 2);
             }
 
             return formattedOutput;
