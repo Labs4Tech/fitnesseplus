@@ -5,11 +5,26 @@ using System.Text.RegularExpressions;
 
 namespace SmartPad.Implementations
 {
+    public static class PipeFormattingExtensions
+    {
+        public static string TrimStartingPipe(this string text)
+        {
+            if(text.Trim().StartsWith('|'))
+                text = text.Remove(0,1);
+            // if (text.Trim().EndsWith('|'))
+            //     text = text.Remove(text.Length-2);
+
+            return text;
+        }
+    }
+
     public class SampleFormatter: Formatter
     {
         public SampleFormatter(TextContent content) : base(content)
         {
         }
+
+       
 
         protected override string FormatAction(TextContent content)
         {
@@ -27,7 +42,7 @@ namespace SmartPad.Implementations
                     .Split('\n')
                     .Select(line =>
                         line.Trim()
-                            .Trim('|') // remove outer pipes
+                            .TrimStartingPipe()
                             .Split('|')
                             .Select(cell => cell.Trim())
                             .ToList()
@@ -41,26 +56,27 @@ namespace SmartPad.Implementations
                 for (int colNumber = 0; colNumber < maxColCount; colNumber++)
                 {
                     colWidths[colNumber] = rows.Max(cellsInRow =>
-                        colNumber < cellsInRow.Count ? cellsInRow[colNumber].Length : 0
+                        colNumber < cellsInRow.Count ? cellsInRow[colNumber].Trim().Length : 0
                     );
                 }
 
                 // Step 5: Build formatted output
-                var formattedFixture = rows.Select(cellsInRow =>
+                var formattedLines= rows.Select(cellsInRow =>
                 {
-                    var paddedCells = cellsInRow.Select((cell, i) =>
+                    var paddedCells = cellsInRow.SkipLast(1).Select((cell, i) =>
                     {
                         var paddingAmount =  colWidths[i];
-                        if (cellsInRow.Count > maxColCount && i + 1 >= cellsInRow.Count)
-                            paddingAmount = 0;
-                        else if (cellsInRow.Count < maxColCount && i + 1 == cellsInRow.Count)
-                            paddingAmount = colWidths.Skip(i+1).Sum() + 2*maxColCount;
+                        if (cellsInRow.Count > maxColCount && i + 2 >= cellsInRow.Count)
+                            paddingAmount = cell.Length;
+                        else if (cellsInRow.Count < maxColCount && i + 2 == cellsInRow.Count)
+                            paddingAmount = colWidths.Skip(i).Sum() + (maxColCount - 1) * 3 + 2; ;
+
                         return cell.PadRight(paddingAmount);
                     });
                     return "| " + string.Join(" | ", paddedCells) + " |";
                 });
 
-                formattedOutput += string.Join("\n", formattedFixture);
+                formattedOutput += string.Join("\n", formattedLines);
             }
 
             return formattedOutput;
