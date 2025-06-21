@@ -69,7 +69,7 @@ namespace SmartPad.Implementations
                         if (cellsInRow.Count > maxColCount && i + 2 >= cellsInRow.Count)
                             paddingAmount = cell.Length;
                         else if (cellsInRow.Count < maxColCount && i + 2 == cellsInRow.Count)
-                            paddingAmount = colWidths.Skip(i).Sum() + (maxColCount - 1) * 3 + 2; ;
+                            paddingAmount = colWidths.Skip(i).Sum() + ((maxColCount - 3) * 3);
 
                         return cell.PadRight(paddingAmount);
                     });
