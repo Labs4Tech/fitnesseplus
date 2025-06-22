@@ -18,9 +18,9 @@ namespace SmartPad.Implementations
         }
     }
 
-    public class SampleFormatter: Formatter
+    public class FitnesseFormatter: Formatter
     {
-        public SampleFormatter(TextContent content) : base(content)
+        public FitnesseFormatter(TextContent content) : base(content)
         {
         }
 
@@ -83,7 +83,7 @@ namespace SmartPad.Implementations
                 });
 
                 formattedOutput += string.Join("\n", formattedLines);
-                AddNewLines(ref formattedOutput, 2);
+                AddNewLines(ref formattedOutput, 3);
             }
 
             return formattedOutput;

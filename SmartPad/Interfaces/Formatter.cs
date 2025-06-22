@@ -13,10 +13,10 @@ namespace SmartPad.Interfaces
 
         protected abstract string FormatAction(TextContent content);
 
-        public virtual void Format()
+        public void Format()
         {
             var formattedRawContent = FormatAction(_content);
-            _content.RawContent = formattedRawContent;
+            _content.UpdateContent(formattedRawContent);
         }
     }
 }

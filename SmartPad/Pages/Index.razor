@@ -1,37 +1,64 @@
 ﻿@page "/"
 @using SmartPad.Implementations
+@using SmartPad.Interfaces
+
 
 @*Action Row*@
 <div class="sticky-top bg-light p-2 border-bottom text-end">
+    <button type="button" class="btn btn-outline-secondary"
+            onclick="@TogglePreview">
+        @(IsInPreviewMode?"Code":"Preview")
+    </button>
+    
     <button type="button" class="btn btn-secondary"
-            onclick="@FormatContent">Format</button>
+            onclick="@FormatContent">
+        Format
+    </button>
+    
 </div>
 
-<textarea class="w-100 h-screen mt-1 "
-    placeholder="Start Typing..." 
-    onchange="@UpdateContent" value="@content.RawContent"
-/>
+@if (IsInPreviewMode)
+{
+    <div class="m-2">@((MarkupString)Content.ParsedContent)</div>
+}
+else
+{
+    <textarea class="w-100 h-screen mt-1 "
+          placeholder="Start Typing..."
+          onchange="@UpdateContent" value="@Content.RawContent">
+    </textarea>
+}
 
 @code {
-    private TextContent content = new();
-    private SampleFormatter formatter;
 
-    protected override void OnAfterRender(bool firstRender)
+    private bool IsInPreviewMode = false;
+
+    private TextContent Content;
+    private FitnesseFormatter Formatter;
+    private FitnesseSyntaxParser _syntaxParser;
+
+    protected override void OnInitialized()
     {
-        formatter = new SampleFormatter(content);
+        var parsersToRun = new List<Parser>{ new FitnesseSyntaxParser() };
+        Content = new TextContent(parsersToRun);
+        Formatter = new FitnesseFormatter(Content);
     }
-
 
     private void UpdateContent(ChangeEventArgs e)
     {
-        content.RawContent = e.Value?.ToString() ?? "";
+        Content.UpdateContent(e.Value?.ToString() ?? "");
     }
 
     private void FormatContent()
     {
-        formatter.Format();
+        Formatter.Format();
     }
 
-    
+
+    private void TogglePreview()
+    {
+        Content.ParseContent();
+        IsInPreviewMode = !IsInPreviewMode;
+    }
 }
 
